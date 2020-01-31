@@ -1,0 +1,29 @@
+{
+  "name": "ypszi/swagger-schema-validator",
+  "license": "proprietary",
+  "type": "project",
+  "config": {
+    "sort-packages": true
+  },
+  "require": {
+    "php": "^7.2",
+    "cebe/php-openapi": "^1.3",
+    "doctrine/collections": "^1.6",
+    "illuminate/support": "^6.13",
+    "pimple/pimple": "^3.2",
+    "psr/http-message": "^1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Ypszi\\SwaggerSchemaValidator\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Ypszi\\SwaggerSchemaValidator\\Test\\": "test/"
+    }
+  }
+}
