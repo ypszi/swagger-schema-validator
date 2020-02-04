@@ -52,7 +52,7 @@ class RequiredIfExistConstraint implements ConstraintInterface
 
     private function replaceWildcards(string $string): string
     {
-        return strtr($string, [Validator::ANY_KEY_WILDCARD => '0']);
+        return strtr($string, [Validator::ANY_KEY_WILDCARD => '(.+)']);
     }
 
     private function pregGrep(string $regexp, array $data): array

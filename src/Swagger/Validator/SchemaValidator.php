@@ -2,11 +2,13 @@
 
 namespace Ypszi\SwaggerSchemaValidator\Swagger\Validator;
 
+use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\Reader as OpenApiParser;
 use cebe\openapi\spec\PathItem;
 use cebe\openapi\spec\Paths;
 use cebe\openapi\spec\Responses;
 use cebe\openapi\spec\Schema;
+use cebe\openapi\spec\Type;
 use cebe\openapi\SpecBaseObject;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
@@ -14,30 +16,16 @@ use RuntimeException;
 use Ypszi\SwaggerSchemaValidator\Validator\Constraint\ArrayConstraint;
 use Ypszi\SwaggerSchemaValidator\Validator\Constraint\Base64Constraint;
 use Ypszi\SwaggerSchemaValidator\Validator\Constraint\BooleanConstraint;
-use Ypszi\SwaggerSchemaValidator\Validator\Constraint\ConstraintCollection;
 use Ypszi\SwaggerSchemaValidator\Validator\Constraint\DateTimeStringConstraint;
 use Ypszi\SwaggerSchemaValidator\Validator\Constraint\FloatConstraint;
 use Ypszi\SwaggerSchemaValidator\Validator\Constraint\IntegerConstraint;
 use Ypszi\SwaggerSchemaValidator\Validator\Constraint\RegexpConstraint;
 use Ypszi\SwaggerSchemaValidator\Validator\Constraint\StringConstraint;
-use Ypszi\SwaggerSchemaValidator\Validator\Rule\RuleNormalizer;
 use Ypszi\SwaggerSchemaValidator\Validator\Validator\ValidationResult;
 use Ypszi\SwaggerSchemaValidator\Validator\Validator\Validator;
 
-class SchemaValidator
+class SchemaValidator extends Validator
 {
-    /** @var ConstraintCollection */
-    private $constraintCollection;
-
-    /** @var RuleNormalizer */
-    private $ruleNormalizer;
-
-    public function __construct(ConstraintCollection $constraintCollection, RuleNormalizer $ruleNormalizer)
-    {
-        $this->constraintCollection = $constraintCollection;
-        $this->ruleNormalizer = $ruleNormalizer;
-    }
-
     public function validateSwaggerSchema(
         string $swaggerFilePath,
         ResponseInterface $response,
@@ -46,28 +34,52 @@ class SchemaValidator
         int $statusCode = 200
     ): ValidationResult {
         $swaggerSchema = OpenApiParser::readFromYamlFile(realpath($swaggerFilePath));
-        $responseSchema = $this->findSwaggerResponseSchema($swaggerSchema, $uri, $method, $statusCode);
+        $responses = $this->findSwaggerResponseSchema($swaggerSchema, $uri, $method, $statusCode);
 
-        return $this->validateSchema($responseSchema, $response);
+        $responseSchema = $responses->getResponse($statusCode);
+
+        if (!isset($responseSchema->content['application/json']->schema)) {
+            $this->setRules(['statusCode' => 'in:' . implode(',', array_keys($responses->getResponses()))]);
+
+            return $this->validate(['statusCode' => $response->getStatusCode()]);
+        }
+
+        return $this->validateSchema($responseSchema->content['application/json']->schema, $response);
     }
 
+    /**
+     * @param SpecBaseObject $swaggerSchema
+     * @param string $uri
+     * @param string $method
+     * @param int $statusCode
+     *
+     * @return Responses
+     *
+     * @throws InvalidArgumentException when response schema not found
+     * @throws TypeErrorException
+     */
     private function findSwaggerResponseSchema(
         SpecBaseObject $swaggerSchema,
         string $uri,
         string $method,
         int $statusCode = 200
-    ): Schema {
+    ): Responses {
         $method = strtolower($method);
         $swaggerPath = $this->findSwaggerPath($swaggerSchema, $uri, $method);
         $responses = $swaggerPath->{$method}->responses ?? new Responses([]);
 
         if (!$responses->hasResponse($statusCode)) {
             throw new InvalidArgumentException(
-                sprintf('Swagger response schema not found for statusCode: %s', $statusCode)
+                sprintf(
+                    'Swagger response schema not found for statusCode, method, uri: %s - [%s] %s',
+                    $statusCode,
+                    $method,
+                    $uri
+                )
             );
         }
 
-        return $responses->getResponse($statusCode)->content['application/json']->schema;
+        return $responses;
     }
 
     private function findSwaggerPath(SpecBaseObject $swaggerSchema, string $uri, string $method): PathItem
@@ -91,13 +103,13 @@ class SchemaValidator
         Schema $responseSchema,
         ResponseInterface $response,
         string $schemaPrefix = '',
-        array $expectedResponse = []
+        string $fieldKey = null
     ): ValidationResult {
         if (isset($responseSchema->type)) {
             $schemaDataType = $responseSchema->type;
 
-            if ($this->isPrimitiveType($schemaDataType)) {
-                $rulesForFields = $this->createRulesForFields($responseSchema, $schemaPrefix);
+            if (Type::isScalar($schemaDataType)) {
+                $rulesForFields = $this->createRulesForFields($responseSchema, $schemaPrefix, $fieldKey);
 
                 return $this->validateSubSchema($rulesForFields, $response);
             }
@@ -106,12 +118,22 @@ class SchemaValidator
                 $validationResult = new ValidationResult([], []);
 
                 foreach ($responseSchema->properties as $propertyKey => $property) {
-                    $propertyValidationResult = $this->validateSchema(
-                        $property,
-                        $response,
-                        $schemaPrefix . $propertyKey . '.',
-                        $expectedResponse
-                    );
+                    if (isset($property->type) && Type::isScalar($property->type)) {
+                        $propertyValidationResult = $this->validateSchema(
+                            $property,
+                            $response,
+                            $schemaPrefix . $propertyKey,
+                            $propertyKey
+                        );
+                    }
+                    else {
+                        $propertyValidationResult = $this->validateSchema(
+                            $property,
+                            $response,
+                            $schemaPrefix . $propertyKey . '.',
+                            $propertyKey
+                        );
+                    }
 
                     $validationResult = new ValidationResult(
                         array_merge(
@@ -126,7 +148,7 @@ class SchemaValidator
             }
 
             if ($schemaDataType === 'array') {
-                $rulesForFields = $this->createRulesForFields($responseSchema->items, '*');
+                $rulesForFields = $this->createRulesForFields($responseSchema->items, '*.');
 
                 return $this->validateSubSchema($rulesForFields, $response);
             }
@@ -138,7 +160,7 @@ class SchemaValidator
             foreach ($responseSchema->allOf as $schema) {
                 $rulesForFields = array_merge(
                     $rulesForFields,
-                    $this->createRulesForFields($schema, substr($schemaPrefix, 0, -1))
+                    $this->createRulesForFields($schema, $schemaPrefix, $fieldKey)
                 );
             }
 
@@ -168,39 +190,55 @@ class SchemaValidator
 
         $response->getBody()->rewind();
 
-        $validator = new Validator($this->constraintCollection, $this->ruleNormalizer, $rules);
+        $this->setRules($rules);
 
-        return $validator->validate($responseBody);
+        return $this->validate($responseBody);
     }
 
-    private function createRulesForFields(Schema $schema, string $schemaPrefix = '', array $fields = []): array
-    {
+    private function createRulesForFields(
+        Schema $schema,
+        string $schemaPrefix = '',
+        string $fieldKey = null,
+        array $fields = []
+    ): array {
         if (!isset($schema->type)) {
             throw new InvalidArgumentException('Schema does not have "type" property');
         }
 
         $schemaDataType = $schema->type;
 
-        if ($this->isPrimitiveType($schemaDataType)) {
+        if (Type::isScalar($schemaDataType)) {
             $isNullable = isset($schema->nullable) && $schema->nullable === true;
-            $fields[$schemaPrefix] = $this->getRules($schema, $isNullable, $schemaPrefix);
+
+            if ($schemaPrefix === (string)$fieldKey) {
+                $fields[$fieldKey] = $this->createSchemaRules($schema, $isNullable);
+            }
+            else {
+                $fields[$schemaPrefix . $fieldKey] = $this->createSchemaRules($schema, $isNullable, $schemaPrefix);
+            }
 
             return $fields;
         }
 
         if ($schemaDataType === 'object') {
             foreach ($schema->properties as $propertyKey => $property) {
-                $prefixedPropertyKey = $schemaPrefix . '.' . $propertyKey;
                 $isNullable = isset($property->nullable) && $property->nullable === true;
-                $dataType = $property->type;
 
-                if ($this->isPrimitiveType($dataType)) {
-                    $fields[$prefixedPropertyKey] = $this->getRules($property, $isNullable, $schemaPrefix);
+                if (isset($property->type) && Type::isScalar($property->type)) {
+                    $prefixedPropertyKey = $schemaPrefix . $propertyKey;
+
+                    $fields[$prefixedPropertyKey] = $this->createSchemaRules(
+                        $property,
+                        $isNullable,
+                        $this->removeLeafField($schemaPrefix)
+                    );
                 }
                 else {
+                    $prefixedPropertyKey = $schemaPrefix . $propertyKey . '.';
+
                     $fields = array_merge(
                         $fields,
-                        $this->createRulesForFields($property, $prefixedPropertyKey, $fields)
+                        $this->createRulesForFields($property, $prefixedPropertyKey, $fieldKey, $fields)
                     );
                 }
             }
@@ -210,25 +248,21 @@ class SchemaValidator
             $isNullable = isset($schema->nullable) && $schema->nullable === true;
             $items = $schema->items;
             $dataType = $items->type;
+            $field = $this->removeLeafField($schemaPrefix);
 
-            if ($this->isPrimitiveType($dataType)) {
-                $fields[$schemaPrefix] = $this->getRules($schema, $isNullable);
+            if (Type::isScalar($dataType)) {
+                $fields[$field] = $this->createSchemaRules($schema, $isNullable, $this->removeLeafField($field));
             }
             else {
-                $fields[$schemaPrefix] = $this->getRules($schema, $isNullable);
+                $fields[$field] = $this->createSchemaRules($schema, $isNullable, $this->removeLeafField($field));
                 $fields = array_merge(
                     $fields,
-                    $this->createRulesForFields($items, $schemaPrefix . '.*', $fields)
+                    $this->createRulesForFields($items, $schemaPrefix . '*.', $fieldKey, $fields)
                 );
             }
         }
 
         return $fields;
-    }
-
-    private function isPrimitiveType(string $type): bool
-    {
-        return in_array($type, ['string', 'number', 'integer', 'boolean'], true);
     }
 
     /**
@@ -240,7 +274,7 @@ class SchemaValidator
      *
      * @see  https://swagger.io/docs/specification/data-models/data-types/
      */
-    private function getRules(Schema $schema, bool $isNullable = false, string $fieldPrefix = ''): array
+    private function createSchemaRules(Schema $schema, bool $isNullable = false, string $fieldPrefix = ''): array
     {
         $rules = [];
 
@@ -258,7 +292,7 @@ class SchemaValidator
         switch ($dataType) {
             case 'string':
                 if (isset($schema->format)) {
-                    $rules[] = $this->getRuleByFormat($schema->format);
+                    $rules[] = $this->createSchemaRuleByFormat($schema->format);
                 }
                 elseif (isset($schema->pattern)) {
                     $rules[] = RegexpConstraint::name() . ':' . $schema->pattern;
@@ -291,7 +325,7 @@ class SchemaValidator
         return $rules;
     }
 
-    private function getRuleByFormat(string $format): string
+    private function createSchemaRuleByFormat(string $format): string
     {
         switch ($format) {
             case 'date':

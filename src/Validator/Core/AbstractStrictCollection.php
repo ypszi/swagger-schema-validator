@@ -23,5 +23,7 @@ abstract class AbstractStrictCollection extends ArrayCollection
     public function add($value)
     {
         $this->assertType($value);
+
+        parent::add($value);
     }
 }

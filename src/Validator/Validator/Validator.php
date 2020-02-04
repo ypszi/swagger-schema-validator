@@ -433,19 +433,19 @@ class Validator implements ValidatorInterface
         return strpos($string, self::ANY_KEY_WILDCARD) !== false;
     }
 
-    private function getRootField(string $field)
+    protected function getRootField(string $field)
     {
         $fieldParts = explode(self::MULTIDIMENSIONAL_SEPARATOR, $field);
 
         return array_shift($fieldParts);
     }
 
-    private function isRootField(string $field): bool
+    protected function isRootField(string $field): bool
     {
         return $this->getRootField($field) === $field;
     }
 
-    private function removeLeafField(string $field): ?string
+    protected function removeLeafField(string $field): ?string
     {
         $fieldParts = explode(self::MULTIDIMENSIONAL_SEPARATOR, $field);
 
@@ -458,14 +458,14 @@ class Validator implements ValidatorInterface
         return implode(self::MULTIDIMENSIONAL_SEPARATOR, $fieldParts);
     }
 
-    private function getLeafField(string $field): ?string
+    protected function getLeafField(string $field): ?string
     {
         $fieldParts = explode(self::MULTIDIMENSIONAL_SEPARATOR, $field);
 
         return array_pop($fieldParts);
     }
 
-    private function getDepth(string $field): int
+    protected function getDepth(string $field): int
     {
         return count(explode(self::MULTIDIMENSIONAL_SEPARATOR, $field));
     }
