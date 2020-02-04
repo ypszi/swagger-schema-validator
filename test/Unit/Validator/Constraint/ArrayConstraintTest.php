@@ -7,7 +7,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\ArrayConstraint;
 
 class ArrayConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new ArrayConstraint();
 
@@ -22,14 +22,14 @@ class ArrayConstraintTest extends TestCase
         $this->assertFalse($constraint->validate(''));
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new ArrayConstraint();
 
         $this->assertEquals('name should be an array.', $constraint->getMessage('name', 'value'));
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('array', ArrayConstraint::name());
     }

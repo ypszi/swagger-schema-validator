@@ -7,7 +7,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\IntegerConstraint;
 
 class IntegerConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new IntegerConstraint();
 
@@ -27,14 +27,14 @@ class IntegerConstraintTest extends TestCase
         $this->assertFalse($constraint->validate(''));
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new IntegerConstraint();
 
         $this->assertEquals('name should be an integer.', $constraint->getMessage('name', 'value'));
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('int', IntegerConstraint::name());
     }

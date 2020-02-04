@@ -8,7 +8,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\DateTimeStringConstraint;
 
 class DateTimeStringConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new DateTimeStringConstraint();
 
@@ -21,7 +21,7 @@ class DateTimeStringConstraintTest extends TestCase
         $this->assertFalse($constraint->validate(true));
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new DateTimeStringConstraint();
 
@@ -31,7 +31,7 @@ class DateTimeStringConstraintTest extends TestCase
         );
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('dateTimeString', DateTimeStringConstraint::name());
     }

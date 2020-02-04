@@ -7,7 +7,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\InConstraint;
 
 class InConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new InConstraint();
 
@@ -17,7 +17,7 @@ class InConstraintTest extends TestCase
         $this->assertFalse($constraint->validate('value', ['not', 'in', 'accepted', 'values']));
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new InConstraint();
 
@@ -27,7 +27,7 @@ class InConstraintTest extends TestCase
         );
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('in', InConstraint::name());
     }

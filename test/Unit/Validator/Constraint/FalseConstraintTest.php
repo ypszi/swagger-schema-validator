@@ -7,7 +7,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\FalseConstraint;
 
 class FalseConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new FalseConstraint();
 
@@ -24,14 +24,14 @@ class FalseConstraintTest extends TestCase
         $this->assertFalse($constraint->validate('1'));
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new FalseConstraint();
 
         $this->assertEquals('name should be false.', $constraint->getMessage('name', 'value'));
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('false', FalseConstraint::name());
     }

@@ -9,7 +9,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\GreaterThanConstraint;
 
 class GreaterThanConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new GreaterThanConstraint();
 
@@ -45,7 +45,7 @@ class GreaterThanConstraintTest extends TestCase
         );
     }
 
-    public function testItInvalidatesTheProvidedValues()
+    public function testItInvalidatesTheProvidedValues(): void
     {
         $constraint = new GreaterThanConstraint();
 
@@ -80,7 +80,7 @@ class GreaterThanConstraintTest extends TestCase
         );
     }
 
-    public function testItWillThrowAnExceptionIfTheRuleIsMalformed()
+    public function testItWillThrowAnExceptionIfTheRuleIsMalformed(): void
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage(
@@ -92,14 +92,14 @@ class GreaterThanConstraintTest extends TestCase
         $constraint->validate('5');
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new GreaterThanConstraint();
 
         $this->assertEquals('4 should be greater than 5.', $constraint->getMessage('4', '7', [5]));
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('greaterThan', GreaterThanConstraint::name());
     }

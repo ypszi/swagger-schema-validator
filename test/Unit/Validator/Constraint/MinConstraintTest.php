@@ -7,7 +7,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\MinConstraint;
 
 class MinConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new MinConstraint();
 
@@ -21,7 +21,7 @@ class MinConstraintTest extends TestCase
         $this->assertFalse($constraint->validate(5, [6]));
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new MinConstraint();
 
@@ -31,7 +31,7 @@ class MinConstraintTest extends TestCase
         );
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('min', MinConstraint::name());
     }

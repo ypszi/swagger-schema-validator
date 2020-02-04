@@ -2215,7 +2215,7 @@ class ValidatorTest extends TestCase
         ];
     }
 
-    public function testIfDefaultValuesAreSetWhenDataIsNotProvided()
+    public function testIfDefaultValuesAreSetWhenDataIsNotProvided(): void
     {
         $validator = $this->createTestValidator(
             [

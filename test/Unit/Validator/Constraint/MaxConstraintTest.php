@@ -7,7 +7,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\MaxConstraint;
 
 class MaxConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new MaxConstraint();
 
@@ -22,7 +22,7 @@ class MaxConstraintTest extends TestCase
         $this->assertFalse($constraint->validate(5, [4]));
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new MaxConstraint();
 
@@ -32,7 +32,7 @@ class MaxConstraintTest extends TestCase
         );
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('max', MaxConstraint::name());
     }

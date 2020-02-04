@@ -7,7 +7,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\BooleanConstraint;
 
 class BooleanConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new BooleanConstraint();
 
@@ -24,14 +24,14 @@ class BooleanConstraintTest extends TestCase
         $this->assertFalse($constraint->validate('string'));
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new BooleanConstraint();
 
         $this->assertEquals('name should be a boolean.', $constraint->getMessage('name', 'value'));
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('bool', BooleanConstraint::name());
     }

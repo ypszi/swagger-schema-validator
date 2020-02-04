@@ -10,7 +10,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\InstanceOfConstraint;
 
 class InstanceOfConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new InstanceOfConstraint();
 
@@ -21,7 +21,7 @@ class InstanceOfConstraintTest extends TestCase
         $this->assertFalse($constraint->validate(new DateTime(), [DateTimeImmutable::class]));
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new InstanceOfConstraint();
 
@@ -31,7 +31,7 @@ class InstanceOfConstraintTest extends TestCase
         );
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('instanceOf', InstanceOfConstraint::name());
     }

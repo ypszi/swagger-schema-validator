@@ -7,25 +7,25 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\BooleanConstraint;
 use Ypszi\SwaggerSchemaValidator\Validator\Constraint\ConstraintCollection;
 use Ypszi\SwaggerSchemaValidator\Validator\Rule\RuleNormalizer;
 use Ypszi\SwaggerSchemaValidator\Validator\Validator\ValidateDataTrait;
+use Ypszi\SwaggerSchemaValidator\Validator\Validator\ValidationException;
 use Ypszi\SwaggerSchemaValidator\Validator\Validator\Validator;
 
 class ValidateDataTraitTest extends TestCase
 {
     use ValidateDataTrait;
 
-    public function testValidateMatchingTheRules()
+    public function testValidateMatchingTheRules(): void
     {
         $result = $this->getValidatedData($this->createTestValidator(['test1' => 'bool']), ['test1' => true]);
 
         $this->assertEquals(['test1' => true], $result);
     }
 
-    /**
-     * @expectedException \Ypszi\SwaggerSchemaValidator\Validator\Validator\ValidationException
-     * @expectedExceptionMessage Validation error
-     */
-    public function testValidateDataNotMatchingTheRules()
+    public function testValidateDataNotMatchingTheRules(): void
     {
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage('Validation error');
+
         $result = $this->getValidatedData($this->createTestValidator(['test1' => 'bool']), ['test1' => 989]);
 
         $this->assertEquals(['test1' => 989], $result);

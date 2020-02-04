@@ -7,7 +7,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\RequiredIfNotExistConstrai
 
 class RequiredIfNotExistConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new RequiredIfNotExistConstraint();
 
@@ -20,7 +20,7 @@ class RequiredIfNotExistConstraintTest extends TestCase
         $this->assertFalse($constraint->validate(null, ['test.key1.key2'], ['test' => ['key1' => 'defined']]));
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new RequiredIfNotExistConstraint();
 
@@ -30,7 +30,7 @@ class RequiredIfNotExistConstraintTest extends TestCase
         );
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('requiredIfNotExist', RequiredIfNotExistConstraint::name());
     }

@@ -12,7 +12,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\StringConstraint;
 
 class ArrayOfConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraints = new ConstraintCollection();
         $constraints->add(new IntegerConstraint());
@@ -34,7 +34,7 @@ class ArrayOfConstraintTest extends TestCase
         $this->assertTrue($constraint->validate([7.01, 7.2], [FloatConstraint::name()]));
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new ArrayOfConstraint(new ConstraintCollection());
 
@@ -44,7 +44,7 @@ class ArrayOfConstraintTest extends TestCase
         );
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('arrayOf', ArrayOfConstraint::name());
     }

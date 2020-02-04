@@ -18,17 +18,17 @@ class EmailConstraintTest extends TestCase
         $this->subject = new EmailConstraint();
     }
 
-    public function testName()
+    public function testName(): void
     {
         $this->assertEquals('email', EmailConstraint::name());
     }
 
-    public function testMessage()
+    public function testMessage(): void
     {
         $this->assertEquals('test should be a valid email address.', $this->subject->getMessage('test', ''));
     }
 
-    public function testInvalidValues()
+    public function testInvalidValues(): void
     {
         $this->assertFalse($this->subject->validate('test'));
         $this->assertFalse($this->subject->validate(345));
@@ -45,7 +45,7 @@ class EmailConstraintTest extends TestCase
         $this->assertFalse($this->subject->validate('θσερ@εχαμπλε.ψομ'));
     }
 
-    public function testValidValue()
+    public function testValidValue(): void
     {
         $this->assertTrue($this->subject->validate('valid@email.com'));
     }

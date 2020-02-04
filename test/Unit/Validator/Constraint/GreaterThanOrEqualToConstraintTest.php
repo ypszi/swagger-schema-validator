@@ -9,7 +9,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\GreaterThanOrEqualToConstr
 
 class GreaterThanOrEqualToConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new GreaterThanOrEqualToConstraint();
 
@@ -56,7 +56,7 @@ class GreaterThanOrEqualToConstraintTest extends TestCase
         $this->assertTrue($constraint->validate('2005-08-17T15:52:01+00:00', ['dateTo']));
     }
 
-    public function testItInvalidatesTheProvidedValue()
+    public function testItInvalidatesTheProvidedValue(): void
     {
         $constraint = new GreaterThanOrEqualToConstraint();
 
@@ -80,7 +80,7 @@ class GreaterThanOrEqualToConstraintTest extends TestCase
         );
     }
 
-    public function testItWillThrowAnExceptionIfTheRuleIsMalformed()
+    public function testItWillThrowAnExceptionIfTheRuleIsMalformed(): void
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage(
@@ -92,14 +92,14 @@ class GreaterThanOrEqualToConstraintTest extends TestCase
         $constraint->validate('5');
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new GreaterThanOrEqualToConstraint();
 
         $this->assertEquals('4 should be greater than or equal to 5.', $constraint->getMessage('4', '7', [5]));
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('greaterThanOrEqualTo', GreaterThanOrEqualToConstraint::name());
     }

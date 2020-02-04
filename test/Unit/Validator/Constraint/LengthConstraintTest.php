@@ -2,6 +2,7 @@
 
 namespace Ypszi\SwaggerSchemaValidator\Validator\Test\Unit\Constraint;
 
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Ypszi\SwaggerSchemaValidator\Validator\Constraint\ConstraintInterface;
@@ -42,23 +43,26 @@ class LengthConstraintTest extends TestCase
         $this->assertTrue($this->subject->validate(null));
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage The 'length' constraint is malformed. Expected: 'length:{digitalNumber}'.
-     */
-    public function testItThrowsTheExceptionWhenMinValueIsNotProvided()
+    public function testItThrowsTheExceptionWhenMinValueIsNotProvided(): void
     {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            'The \'length\' constraint is malformed. Expected: \'length:{digitalNumber}\'.'
+        );
+
         (new LengthConstraint())->validate('test string', []);
     }
 
     /**
-     * @dataProvider             getWrongValidationDataTypes
-     *
-     * @expectedException \LogicException
-     * @expectedExceptionMessage The 'length' constraint can be used to validate only strings or arrays length.
+     * @dataProvider getWrongValidationDataTypes
      */
-    public function testItThrowsTheExceptionWhenValidatedValueIsNotStringOrArray($data)
+    public function testItThrowsTheExceptionWhenValidatedValueIsNotStringOrArray($data): void
     {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            'The \'length\' constraint can be used to validate only strings or arrays length.'
+        );
+
         (new LengthConstraint())->validate($data, [0]);
     }
 

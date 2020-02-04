@@ -2,6 +2,7 @@
 
 namespace Ypszi\SwaggerSchemaValidator\Validator\Test\Unit\Rule;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Ypszi\SwaggerSchemaValidator\Validator\Rule\Rule;
 use Ypszi\SwaggerSchemaValidator\Validator\Rule\RuleCollection;
@@ -65,12 +66,12 @@ class RuleNormalizerTest extends TestCase
      * @param array $rules
      *
      * @dataProvider invalidRuleDataProvider
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessageRegExp /^\w+ constraint cannot be used in string rules\.$/
      */
     public function testSpecialRuleSeparatorsInRegexpAsStringRule(array $rules): void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/^\w+ constraint cannot be used in string rules\.$/');
+
         $this->subject->getNormalizeRules($rules);
     }
 

@@ -7,7 +7,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\UrlConstraint;
 
 class UrlConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new UrlConstraint();
 
@@ -20,14 +20,14 @@ class UrlConstraintTest extends TestCase
         $this->assertFalse($constraint->validate(false));
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new UrlConstraint();
 
         $this->assertEquals("url must be a valid URL, 'value' provided.", $constraint->getMessage('url', 'value'));
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('url', UrlConstraint::name());
     }

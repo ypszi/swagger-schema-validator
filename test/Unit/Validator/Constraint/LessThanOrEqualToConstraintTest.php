@@ -3,12 +3,13 @@
 namespace Ypszi\SwaggerSchemaValidator\Validator\Test\Unit\Constraint;
 
 use DateTime;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use Ypszi\SwaggerSchemaValidator\Validator\Constraint\LessThanOrEqualToConstraint;
 
 class LessThanOrEqualToConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new LessThanOrEqualToConstraint();
 
@@ -55,7 +56,7 @@ class LessThanOrEqualToConstraintTest extends TestCase
         );
     }
 
-    public function testItInvalidatesTheProvidedValue()
+    public function testItInvalidatesTheProvidedValue(): void
     {
         $constraint = new LessThanOrEqualToConstraint();
 
@@ -85,25 +86,25 @@ class LessThanOrEqualToConstraintTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage The lessThanOrEqualTo constraint is malformed. Expected: 'lessThanOrEqualTo:fieldToCompare'.
-     */
-    public function testItWillThrowAnExceptionIfTheRuleIsMalformed()
+    public function testItWillThrowAnExceptionIfTheRuleIsMalformed(): void
     {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            'The lessThanOrEqualTo constraint is malformed. Expected: \'lessThanOrEqualTo:fieldToCompare\'.'
+        );
         $constraint = new LessThanOrEqualToConstraint();
 
         $constraint->validate('5');
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new LessThanOrEqualToConstraint();
 
         $this->assertEquals('5 should be less than or equal to 4.', $constraint->getMessage('5', '4', [4]));
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('lessThanOrEqualTo', LessThanOrEqualToConstraint::name());
     }

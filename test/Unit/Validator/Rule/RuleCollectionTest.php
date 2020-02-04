@@ -2,6 +2,7 @@
 
 namespace Ypszi\SwaggerSchemaValidator\Validator\Test\Unit\Rule;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Ypszi\SwaggerSchemaValidator\Validator\Rule\Rule;
@@ -24,13 +25,15 @@ class RuleCollectionTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessageRegExp /^"[\\\w]+RuleCollection" should only contain "[\\\w]+Rule" elements$/
-     *
      * @dataProvider invalidElementProvider
      */
     public function testAnythingElseThanRulesCannotBeAdded(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches(
+            '/^"[\\\\\w]+RuleCollection" should only contain "[\\\\\w]+Rule" elements$/'
+        );
+
         $subject = new RuleCollection();
 
         $rule = $this->createMock(stdClass::class);

@@ -2,12 +2,13 @@
 
 namespace Ypszi\SwaggerSchemaValidator\Validator\Test\Unit\Constraint;
 
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use Ypszi\SwaggerSchemaValidator\Validator\Constraint\SameAsConstraint;
 
 class SameAsConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new SameAsConstraint();
 
@@ -30,7 +31,7 @@ class SameAsConstraintTest extends TestCase
         $this->assertFalse($constraint->validate('goodPassword', ['password'], []));
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new SameAsConstraint();
 
@@ -44,17 +45,16 @@ class SameAsConstraintTest extends TestCase
         );
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('sameAs', SameAsConstraint::name());
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage The sameAs constraint is malformed. Expected: 'sameAs:fieldToCompare'.
-     */
-    public function testItWillThrowAnExceptionIfTheRuleIsMalformed()
+    public function testItWillThrowAnExceptionIfTheRuleIsMalformed(): void
     {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The sameAs constraint is malformed. Expected: \'sameAs:fieldToCompare\'.');
+
         $constraint = new SameAsConstraint();
 
         $constraint->validate('5');

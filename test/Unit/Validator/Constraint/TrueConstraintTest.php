@@ -7,7 +7,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\TrueConstraint;
 
 class TrueConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new TrueConstraint();
 
@@ -24,14 +24,14 @@ class TrueConstraintTest extends TestCase
         $this->assertFalse($constraint->validate('0'));
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new TrueConstraint();
 
         $this->assertEquals('name should be true.', $constraint->getMessage('name', 'value'));
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('true', TrueConstraint::name());
     }

@@ -7,7 +7,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\JsonConstraint;
 
 class JsonConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new JsonConstraint();
 
@@ -24,14 +24,14 @@ class JsonConstraintTest extends TestCase
         $this->assertFalse($constraint->validate("{'a':'b'}"));
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new JsonConstraint();
 
         $this->assertEquals('name should be a valid json string.', $constraint->getMessage('name', 'value'));
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('json', JsonConstraint::name());
     }

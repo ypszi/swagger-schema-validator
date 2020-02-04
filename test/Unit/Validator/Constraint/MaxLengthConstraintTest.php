@@ -2,13 +2,14 @@
 
 namespace Ypszi\SwaggerSchemaValidator\Validator\Test\Unit\Constraint;
 
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Ypszi\SwaggerSchemaValidator\Validator\Constraint\MaxLengthConstraint;
 
 class MaxLengthConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new MaxLengthConstraint();
 
@@ -39,16 +40,17 @@ class MaxLengthConstraintTest extends TestCase
         $this->assertTrue($constraint->validate('array_merge', [20]));
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage The 'maxLength' constraint is malformed. Expected: 'maxLength:{digitalNumber}'.
-     */
-    public function testItThrowsTheExceptionWhenMinValueIsNotProvided()
+    public function testItThrowsTheExceptionWhenMinValueIsNotProvided(): void
     {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            'The \'maxLength\' constraint is malformed. Expected: \'maxLength:{digitalNumber}\'.'
+        );
+
         (new MaxLengthConstraint())->validate('test string', []);
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new MaxLengthConstraint();
 
@@ -58,7 +60,7 @@ class MaxLengthConstraintTest extends TestCase
         );
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('maxLength', MaxLengthConstraint::name());
     }

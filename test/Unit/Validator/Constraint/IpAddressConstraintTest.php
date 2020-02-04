@@ -17,12 +17,12 @@ class IpAddressConstraintTest extends TestCase
         $this->subject = new IpAddressConstraint();
     }
 
-    public function testName()
+    public function testName(): void
     {
         $this->assertEquals('ipAddress', IpAddressConstraint::name());
     }
 
-    public function testMessage()
+    public function testMessage(): void
     {
         $this->assertEquals(
             "'test' should be a valid ip address.",
@@ -30,7 +30,7 @@ class IpAddressConstraintTest extends TestCase
         );
     }
 
-    public function testInvalidValues()
+    public function testInvalidValues(): void
     {
         $this->assertFalse($this->subject->validate('test'));
         $this->assertFalse($this->subject->validate('127'));
@@ -40,7 +40,7 @@ class IpAddressConstraintTest extends TestCase
         $this->assertFalse($this->subject->validate('256.256.256.256'));
     }
 
-    public function testValidValues()
+    public function testValidValues(): void
     {
         $this->assertTrue($this->subject->validate(null));
         $this->assertTrue($this->subject->validate('127.0.0.1'));

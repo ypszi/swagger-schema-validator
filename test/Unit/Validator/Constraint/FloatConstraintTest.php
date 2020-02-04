@@ -7,7 +7,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\FloatConstraint;
 
 class FloatConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new FloatConstraint();
 
@@ -20,14 +20,14 @@ class FloatConstraintTest extends TestCase
         $this->assertFalse($constraint->validate('2.1 not a float'));
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new FloatConstraint();
 
         $this->assertEquals('name should be a float.', $constraint->getMessage('name', 'value'));
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('float', FloatConstraint::name());
     }

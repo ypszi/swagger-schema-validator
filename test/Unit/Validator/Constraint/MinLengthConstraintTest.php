@@ -2,13 +2,14 @@
 
 namespace Ypszi\SwaggerSchemaValidator\Validator\Test\Unit\Constraint;
 
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Ypszi\SwaggerSchemaValidator\Validator\Constraint\MinLengthConstraint;
 
 class MinLengthConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new MinLengthConstraint();
 
@@ -39,16 +40,17 @@ class MinLengthConstraintTest extends TestCase
         $this->assertTrue($constraint->validate('echo', [1]));
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage The 'minLength' constraint is malformed. Expected: 'minLength:{digitalNumber}'.
-     */
-    public function testItThrowsTheExceptionWhenMinValueIsNotProvided()
+    public function testItThrowsTheExceptionWhenMinValueIsNotProvided(): void
     {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            'The \'minLength\' constraint is malformed. Expected: \'minLength:{digitalNumber}\'.'
+        );
+
         (new MinLengthConstraint())->validate('test string', []);
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new MinLengthConstraint();
 
@@ -58,7 +60,7 @@ class MinLengthConstraintTest extends TestCase
         );
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('minLength', MinLengthConstraint::name());
     }

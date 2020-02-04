@@ -7,7 +7,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\NotRequiredIfOneExistConst
 
 class NotRequiredIfOneExistConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new NotRequiredIfOneExistConstraint();
 
@@ -21,7 +21,7 @@ class NotRequiredIfOneExistConstraintTest extends TestCase
         $this->assertFalse($constraint->validate(null, ['test']));
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new NotRequiredIfOneExistConstraint();
 
@@ -31,7 +31,7 @@ class NotRequiredIfOneExistConstraintTest extends TestCase
         );
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('notRequiredIfOneExist', NotRequiredIfOneExistConstraint::name());
     }

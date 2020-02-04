@@ -10,7 +10,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Exception\ConstraintCollectionExcepti
 
 class ConstraintCollectionTest extends TestCase
 {
-    public function testItCanRetrieveAddedConstraints()
+    public function testItCanRetrieveAddedConstraints(): void
     {
         $constraint1 = new RequiredConstraint();
         $constraint2 = new StringConstraint();
@@ -24,7 +24,7 @@ class ConstraintCollectionTest extends TestCase
         $this->assertSame($constraint2, $collection->get(StringConstraint::name()));
     }
 
-    public function testItWillThrownAnExceptionIfWeTryToAddTwiceTheSameConstraint()
+    public function testItWillThrownAnExceptionIfWeTryToAddTwiceTheSameConstraint(): void
     {
         $this->expectException(ConstraintCollectionException::class);
         $this->expectExceptionMessageMatches('/^Constraint already added: "required"$/');
@@ -38,7 +38,7 @@ class ConstraintCollectionTest extends TestCase
             ->add($constraint2);
     }
 
-    public function testItThrowsAnExceptionIfAConstraintCannotBeFound()
+    public function testItThrowsAnExceptionIfAConstraintCannotBeFound(): void
     {
         $this->expectException(ConstraintCollectionException::class);
         $this->expectExceptionMessageMatches('/^Constraint not found: "required"$/');

@@ -7,7 +7,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\NullConstraint;
 
 class NullConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new NullConstraint();
 
@@ -17,14 +17,14 @@ class NullConstraintTest extends TestCase
         $this->assertFalse($constraint->validate(''));
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new NullConstraint();
 
         $this->assertEquals('name should be null.', $constraint->getMessage('name', 'value'));
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('null', NullConstraint::name());
     }

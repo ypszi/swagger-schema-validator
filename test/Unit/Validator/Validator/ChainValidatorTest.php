@@ -31,7 +31,7 @@ class ChainValidatorTest extends TestCase
         $this->chainValidator = new ChainValidator();
     }
 
-    public function testItSucceedChainValidationProcess()
+    public function testItSucceedChainValidationProcess(): void
     {
         $validator1 = $this->createTestValidator(
             [
@@ -64,7 +64,7 @@ class ChainValidatorTest extends TestCase
         $this->assertEmpty($result->getErrors());
     }
 
-    public function testItFailedWhenValidatingDataNotMatchingTheRules()
+    public function testItFailedWhenValidatingDataNotMatchingTheRules(): void
     {
         $validator1 = $this->createTestValidator(
             [

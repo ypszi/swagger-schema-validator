@@ -17,12 +17,12 @@ class RegexpConstraintTest extends TestCase
         $this->subject = new RegexpConstraint();
     }
 
-    public function testName()
+    public function testName(): void
     {
         $this->assertEquals('regexp', RegexpConstraint::name());
     }
 
-    public function testMessage()
+    public function testMessage(): void
     {
         $this->assertEquals(
             "test should match regular expression: /test/",
@@ -30,7 +30,7 @@ class RegexpConstraintTest extends TestCase
         );
     }
 
-    public function testInvalidValues()
+    public function testInvalidValues(): void
     {
         $this->assertFalse($this->subject->validate('test', ['/[0-9]+/']));
         $this->assertFalse($this->subject->validate('testX', ['/test$/']));
@@ -44,7 +44,7 @@ class RegexpConstraintTest extends TestCase
         $this->assertFalse($this->subject->validate('127.0.0.', ['/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\z/']));
     }
 
-    public function testValidValues()
+    public function testValidValues(): void
     {
         $this->assertTrue($this->subject->validate(null, ['/[a-z]+/']));
         $this->assertTrue($this->subject->validate('test', ['/[a-z]+/']));

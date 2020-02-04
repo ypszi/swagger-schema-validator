@@ -7,7 +7,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Constraint\RequiredConstraint;
 
 class RequiredConstraintTest extends TestCase
 {
-    public function testItValidatesTheProvidedValue()
+    public function testItValidatesTheProvidedValue(): void
     {
         $constraint = new RequiredConstraint();
 
@@ -17,14 +17,14 @@ class RequiredConstraintTest extends TestCase
         $this->assertFalse($constraint->validate(''));
     }
 
-    public function testItReturnsAMessage()
+    public function testItReturnsAMessage(): void
     {
         $constraint = new RequiredConstraint();
 
         $this->assertEquals('name is required.', $constraint->getMessage('name', 'value'));
     }
 
-    public function testIfNameIsCorrect()
+    public function testIfNameIsCorrect(): void
     {
         $this->assertEquals('required', RequiredConstraint::name());
     }

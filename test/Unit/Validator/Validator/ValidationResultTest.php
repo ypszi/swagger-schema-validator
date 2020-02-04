@@ -7,7 +7,7 @@ use Ypszi\SwaggerSchemaValidator\Validator\Validator\ValidationResult;
 
 class ValidationResultTest extends TestCase
 {
-    public function testItReturnsIfTheResultIsValid()
+    public function testItReturnsIfTheResultIsValid(): void
     {
         $result = new ValidationResult([], []);
 
@@ -18,14 +18,14 @@ class ValidationResultTest extends TestCase
         $this->assertFalse($result->isValid());
     }
 
-    public function testItReturnsTheErrors()
+    public function testItReturnsTheErrors(): void
     {
         $result = new ValidationResult([], ['error']);
 
         $this->assertEquals(['error'], $result->getErrors());
     }
 
-    public function testItReturnsTheValidatedData()
+    public function testItReturnsTheValidatedData(): void
     {
         $result = new ValidationResult(['data'], []);
 
